@@ -1,7 +1,7 @@
 import InstagramContactBar from "@/components/ui/InstagramContactBar";
 // Author: Manav Arya & Ashmit Dhown
 import { useState } from 'react';
-import { Heart, Star, CreditCard } from 'lucide-react';
+import { Heart, Star, CreditCard, ChevronLeft, ChevronRight } from 'lucide-react';
 import { FixedSizeList as ProductList } from 'react-window';
 import Spline from '@splinetool/react-spline';
 
@@ -10,99 +10,191 @@ import { PageBgAndCursor } from "@/components/PageBgAndCursor";
 interface Product {
   id: number;
   name: string;
-  price: number;
+  price: number | string;
   category: string;
-  image: string;
-  colors: string[];
-  sizes: string[];
-  rating: number;
-  reviews: number;
+  images: string[];
   isNew?: boolean;
   isSale?: boolean;
 }
 
+const ImageSlider = ({ images, productName }: { images: string[], productName: string }) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  return (
+    <div className="relative w-full h-full group">
+      <img 
+        src={images[currentImageIndex]} 
+        alt={`${productName} ${currentImageIndex + 1}`}
+        className="w-full h-full object-contain p-4"
+      />
+      
+      {images.length > 1 && (
+        <>
+          <button
+            onClick={prevImage}
+            className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          
+          <button
+            onClick={nextImage}
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+          
+          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
+            {images.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentImageIndex(index)}
+                className={`w-2 h-2 rounded-full transition-colors duration-200 ${
+                  index === currentImageIndex ? 'bg-white' : 'bg-white/50'
+                }`}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
 const Merch = () => {
   const [wishlist, setWishlist] = useState<number[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-
-  const usdToAed = (usd: number) => (usd * 3.67).toFixed(2);
 
   const products: Product[] = [
     {
       id: 1,
-      name: 'BIts Hoodie',
-      price: 49.99,
-      category: 'hoodie',
-      image: "/assets/MERCH/black-hoodie-mockup-classic-comfortable-stylish-apparel_191095-82052.jpg.avif",
-      colors: ['black', 'navy', 'gray'],
-      sizes: ['S', 'M', 'L', 'XL'],
-      rating: 4.8,
-      reviews: 124,
-      isNew: true
+      name: 'Black Hoodie / Sweatshirt',
+      price: '80 / 65',
+      category: 'Hoodie/Sweatshirt',
+      images: [
+        "/assets/MERCH/BlackHoodie1.png",
+        "/assets/MERCH/BlackHoodie2.png",
+        "/assets/MERCH/BlackHoodie3.png",
+        "/assets/MERCH/BlackHoodie4.png",
+      ],
+      isNew: true,
+      isSale: true
     },
     {
       id: 2,
-      name: 'Bits Tote Bag (Girl)',
-      price: 24.99,
-      category: 'bag',
-      image: "/assets/MERCH/a-beige-cotton-tote-bag-on-a-black-background-png.webp",
-      colors: [],
-      sizes: ['One Size'],
-      rating: 4.7,
-      reviews: 89,
+      name: 'Maroon Hoodie / Sweatshirt',
+      price: '80 / 65',
+      category: 'Hoodie/Sweatshirt',
+      images: [
+        "/assets/MERCH/MaroonHoodie1.png",
+        "/assets/MERCH/MaroonHoodie2.png",
+        "/assets/MERCH/MaroonHoodie3.png",
+        "/assets/MERCH/MaroonHoodie4.png",
+      ],
+      isNew: true,
       isSale: true
     },
     {
       id: 3,
-      name: 'Bits Tote Bag (Boys)',
-      price: 24.99,
-      category: 'bag',
-      image: "/assets/MERCH/a-beige-cotton-tote-bag-on-a-black-background-png.webp",
-      colors: [],
-      sizes: ['One Size'],
-      rating: 4.6,
-      reviews: 67
+      name: 'Grey Hoodie / Sweatshirt',
+      price: '80 / 65',
+      category: 'Hoodie/Sweatshirt',
+      images: [
+        "/assets/MERCH/GreyHoodie1.png",
+        "/assets/MERCH/GreyHoodie2.png",
+        "/assets/MERCH/GreyHoodie3.png",
+        "/assets/MERCH/GreyHoodie4.png",
+      ],
+      isNew: true,
+      isSale: true
     },
     {
       id: 4,
-      name: 'Bits Cap',
-      price: 19.99,
-      category: 'cap',
-      image: "/assets/MERCH/Black_Baseball_Cap_PNG_Clipart-982.webp",
-      colors: ['black', 'navy', 'gray', 'white'],
-      sizes: ['One Size'],
-      rating: 4.5,
-      reviews: 112,
-      isNew: true
+      name: 'Beige Hoodie / Sweatshirt',
+      price: '80 / 65',
+      category: 'Hoodie/Sweatshirt',
+      images: [
+        "/assets/MERCH/BeigeHoodie1.png",
+        "/assets/MERCH/BeigeHoodie2.png",
+        "/assets/MERCH/BeigeHoodie3.png",
+        "/assets/MERCH/BeigeHoodie4.png",
+      ],
+      isNew: true,
+      isSale: true
     },
     {
       id: 5,
-      name: 'Bits Sweatshirt',
-      price: 44.99,
-      category: 'sweatshirt',
-      image: "/assets/MERCH/5d2ac61c96e7f3691bc68e80ad9a2200.webp",
-      colors: ['black', 'gray', 'burgundy'],
-      sizes: ['S', 'M', 'L', 'XL'],
-      rating: 4.7,
-      reviews: 98,
+      name: 'Black T-Shirt',
+      price: 80,
+      category: 'T-Shirts',
+      images: [
+        "/assets/MERCH/BlackTshirt1.png",
+        "/assets/MERCH/BlackTshirt2.png",
+      ],
+      isNew: true,
       isSale: true
     },
     {
       id: 6,
-      name: 'Bits Polo',
-      price: 34.99,
-      category: 'polo',
-      image: "/assets/MERCH/ai-generated-short-sleeves-black-polo-t-shirt-isolated-on-transparent-background-free-png.webp",
-      colors: ['white', 'navy', 'black'],
-      sizes: ['S', 'M', 'L', 'XL'],
-      rating: 4.6,
-      reviews: 76
+      name: 'Maroon T-Shirt',
+      price: 80,
+      category: 'T-Shirts',
+      images: [
+        "/assets/MERCH/MaroonTshirt1.png",
+        "/assets/MERCH/MaroonTshirt2.png",
+      ],
+      isNew: true,
+      isSale: true
     },
+    {
+      id: 7,
+      name: 'Navy Blue T-Shirt',
+      price: 80,
+      category: 'T-Shirts',
+      images: [
+        "/assets/MERCH/BlueNavyTshirt1.png",
+        "/assets/MERCH/BlueNavyTshirt2.png",
+      ],
+      isNew: true,
+      isSale: true
+    },
+    {
+      id: 8,
+      name: 'Lavender T-Shirt',
+      price: 80,
+      category: 'T-Shirts',
+      images: [
+        "/assets/MERCH/LavenderTshirt1.png",
+        "/assets/MERCH/LavenderTshirt2.png",
+      ],
+      isNew: true,
+      isSale: true
+    },
+    {
+      id: 9,
+      name: 'Tote Bag',
+      price: 15,
+      category: 'Bags',
+      images: [
+        "/assets/MERCH/ToteBag1.png",
+        "/assets/MERCH/ToteBag2.png",
+      ],
+      isNew: true,
+      isSale: true
+    }
   ];
 
-  const categories = ['all', ...new Set(products.map(product => product.category))];
+  const categories = ['All', 'Hoodie/Sweatshirt', 'T-Shirts', 'Bags'];
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
   
-  const filteredProducts = selectedCategory === 'all' 
+  const filteredProducts = selectedCategory === 'All' 
     ? products 
     : products.filter(product => product.category === selectedCategory);
 
@@ -145,11 +237,11 @@ const Merch = () => {
         <div id="products-section" className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           
 
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50">
+          {/* <div className="absolute inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50">
             <h2 className="text-4xl md:text-6xl font-bold text-white uppercase tracking-wider">
               Coming Soon
             </h2>
-          </div>
+          </div> */}
 
 
           <div className="flex flex-wrap justify-center gap-3 mb-12">
@@ -170,23 +262,12 @@ const Merch = () => {
 
 
           <div className="w-full">
-            <ProductList
-              height={900}
-              itemCount={filteredProducts.length}
-              itemSize={400}
-              width={"100%"}
-            >
-              {({ index, style }) => {
-                const product = filteredProducts[index];
-                return (
-                  <div key={product.id} style={style} className="bg-black/80 backdrop-blur-md rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col h-full text-white mb-8">
-                    <div className="relative h-80 flex items-center justify-center bg-black/60">
-                      <img 
-                        src={product.image} 
-                        alt={product.name}
-                        className="max-h-full max-w-full p-4 object-contain"
-                      />
-                      <div className="absolute top-3 left-3 flex flex-col space-y-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {filteredProducts.map((product) => (
+                <div key={product.id} className="bg-black/80 backdrop-blur-md rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col h-full text-white">
+                    <div className="relative h-96 flex items-center justify-center bg-black/60">
+                      <ImageSlider images={product.images} productName={product.name} />
+                      <div className="absolute top-3 left-3 flex flex-row space-x-2">
                         {product.isNew && (
                           <span className="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">
                             NEW
@@ -210,66 +291,22 @@ const Merch = () => {
                       </button>
                     </div>
 
-                    <div className="p-5 flex-grow flex flex-col">
+                    <div className="p-5 flex-grow flex flex-col mb-6">
                       <div className="flex justify-between items-start">
                         <div>
                           <h3 className="text-lg font-semibold text-white">{product.name}</h3>
-                          <div className="flex items-center mt-1">
-                            {[...Array(5)].map((_, i) => (
-                              <Star 
-                                key={i}
-                                className={`w-4 h-4 ${
-                                  i < Math.floor(product.rating)
-                                    ? 'text-yellow-400 fill-current'
-                                    : 'text-gray-300'
-                                }`}
-                              />
-                            ))}
-                            <span className="text-sm text-gray-200 ml-1">
-                              ({product.reviews})
-                            </span>
-                          </div>
                         </div>
                         <div className="text-right">
                           <div className="text-xl font-bold text-indigo-400">
-                            AED {usdToAed(product.price)}
+                            AED {product.price}
                           </div>
                         </div>
                       </div>
 
-                      {product.colors.length > 0 && (
-                        <div className="mt-3">
-                          <p className="text-sm text-gray-200">Colors:</p>
-                          <div className="flex space-x-2 mt-1">
-                            {product.colors.map(color => (
-                              <button
-                                key={color}
-                                className={`w-5 h-5 rounded-full border border-gray-200`}
-                                style={{ backgroundColor: color }}
-                                title={color}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      <div className="mt-3">
-                        <p className="text-sm text-gray-200">Sizes:</p>
-                        <div className="flex space-x-2 mt-1">
-                          {product.sizes.map(size => (
-                            <button
-                              key={size}
-                              className="w-8 h-8 flex items-center justify-center text-sm font-medium border border-gray-200 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            >
-                              {size}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
 
                       <div className="mt-auto pt-4">
                         <a
-                          href="https://forms.gle/your-google-form-link"
+                          href="https://forms.gle/eFi38tMfhEiJMtps7"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="w-full flex items-center justify-center bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors duration-200 font-medium"
@@ -280,9 +317,8 @@ const Merch = () => {
                       </div>
                     </div>
                   </div>
-                );
-              }}
-            </ProductList>
+                ))}
+            </div>
           </div>
         </div>
       </div>
