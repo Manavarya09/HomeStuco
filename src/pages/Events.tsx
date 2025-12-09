@@ -61,26 +61,26 @@ const EventCard = ({
           )}
         </div>
       </div>
-      <div className={`h-1 ${gradient}`}></div>
+      <div className={`h-1 bg-black`}></div>
       <div className="p-6 flex-grow flex flex-col">
         <div className="flex items-center mb-4">
-          <div className={`p-3 rounded-lg ${gradient.replace('bg-gradient-to-r', 'bg-gradient-to-br')} text-white mr-4`}>
+          <div className={`p-3 rounded-lg bg-black text-white mr-4`}>
             {icon}
           </div>
           <h3 className="text-2xl font-bold text-white">{t(title, title)}</h3>
         </div>
         <p className="text-white/80 mb-6 flex-grow">{t(description, description)}</p>
         <div className="space-y-3 mt-auto">
-          <div className="flex items-center text-white/70">
-            <Calendar className="w-5 h-5 mr-2 text-indigo-300" />
+          <div className="flex items-center text-white">
+            <Calendar className="w-5 h-5 mr-2 text-white" strokeWidth={2.2} />
             <span>{date}</span>
           </div>
-          <div className="flex items-center text-white/70">
-            <Clock className="w-5 h-5 mr-2 text-indigo-300" />
+          <div className="flex items-center text-white">
+            <Clock className="w-5 h-5 mr-2 text-white" strokeWidth={2.2} />
             <span>{time}</span>
           </div>
-          <div className="flex items-center text-white/70">
-            <MapPin className="w-5 h-5 mr-2 text-indigo-300" />
+          <div className="flex items-center text-white">
+            <MapPin className="w-5 h-5 mr-2 text-white" strokeWidth={2.2} />
             <span>{location}</span>
           </div>
         </div>
@@ -88,7 +88,7 @@ const EventCard = ({
           <a 
             href={buttonLink} 
             target="_self" 
-            className={`bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-md hover:shadow-lg ${isPastEvent ? 'pointer-events-none opacity-60 cursor-not-allowed' : ''}`}
+            className={`bg-black hover:bg-gray-900 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-md hover:shadow-lg ${isPastEvent ? 'pointer-events-none opacity-60 cursor-not-allowed' : ''}`}
             aria-disabled={isPastEvent}
           >
             {isPastEvent ? t('eventEnded', 'Event Ended') : t(buttonLabel, buttonLabel)}
@@ -117,35 +117,22 @@ const Events = () => {
   const getCategoryIcon = (category: string) => {
     switch(category.toLowerCase()) {
       case 'academic':
-        return <span className="text-2xl text-black">📚</span>;
+        return <BookOpen className="w-6 h-6 text-white" strokeWidth={2.2} />;
       case 'cultural':
-        return <span className="text-2xl text-black">🔥</span>;
+        return <Sparkles className="w-6 h-6 text-white" strokeWidth={2.2} />;
       case 'workshop':
-        return <span className="text-2xl text-black">🛠️</span>;
+        return <PartyPopper className="w-6 h-6 text-white" strokeWidth={2.2} />;
       case 'social':
-        return <span className="text-2xl text-black">🎉</span>;
+        return <PartyPopper className="w-6 h-6 text-white" strokeWidth={2.2} />;
       case 'orientation':
-        return <span className="text-2xl text-black">🎯</span>;
+        return <MapPin className="w-6 h-6 text-white" strokeWidth={2.2} />;
       default:
-        return <span className="text-2xl text-black">✨</span>;
+        return <Sparkles className="w-6 h-6 text-white" strokeWidth={2.2} />;
     }
   };
 
   const getCategoryGradient = (category: string) => {
-    switch(category.toLowerCase()) {
-      case 'academic':
-        return 'bg-gradient-to-r from-blue-500 to-indigo-600';
-      case 'cultural':
-        return 'bg-gradient-to-r from-pink-500 to-rose-500';
-      case 'workshop':
-        return 'bg-gradient-to-r from-indigo-500 to-purple-600';
-      case 'social':
-        return 'bg-gradient-to-r from-orange-400 to-yellow-500';
-      case 'orientation':
-        return 'bg-gradient-to-r from-yellow-400 to-orange-500';
-      default:
-        return 'bg-gradient-to-r from-green-400 to-emerald-500';
-    }
+    return 'bg-black';
   };
 
   // Convert loaded events to event cards with icons and gradients
@@ -153,7 +140,9 @@ const Events = () => {
     ...event,
     icon: getCategoryIcon(event.category),
     gradient: getCategoryGradient(event.category)
-  }));  const filteredEvents = events.filter(event => {
+  }));
+
+  const filteredEvents = events.filter(event => {
     const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       event.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = activeCategory === 'all' || event.category.toLowerCase() === activeCategory.toLowerCase();
@@ -197,7 +186,7 @@ const Events = () => {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="relative flex-1 max-w-2xl">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-gray-300" />
+                  <Search className="h-5 w-5 text-white" strokeWidth={2.2} />
                 </div>
                 <input
                   type="text"
@@ -212,23 +201,23 @@ const Events = () => {
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded-lg ${viewMode === 'grid' ? 'bg-indigo-700 text-white' : 'text-gray-300 hover:bg-gray-800'}`}
+                  className={`p-2 rounded-lg ${viewMode === 'grid' ? 'bg-black text-white' : 'text-white hover:bg-gray-800'}`}
                   aria-label="Grid view"
                 >
-                  <Grid className="w-5 h-5" />
+                  <Grid className="w-5 h-5 text-white" strokeWidth={2.2} />
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`p-2 rounded-lg ${viewMode === 'list' ? 'bg-indigo-700 text-white' : 'text-gray-300 hover:bg-gray-800'}`}
+                  className={`p-2 rounded-lg ${viewMode === 'list' ? 'bg-black text-white' : 'text-white hover:bg-gray-800'}`}
                   aria-label="List view"
                 >
-                  <List className="w-5 h-5" />
+                  <List className="w-5 h-5 text-white" strokeWidth={2.2} />
                 </button>
                 <button
                   onClick={() => setIsFilterOpen(!isFilterOpen)}
-                  className="flex items-center space-x-2 px-4 py-2 border border-gray-700 rounded-lg text-gray-200 hover:bg-gray-800 transition-colors"
+                  className="flex items-center space-x-2 px-4 py-2 border border-gray-700 rounded-lg text-white hover:bg-gray-800 transition-colors"
                 >
-                  <Filter className="w-5 h-5" />
+                  <Filter className="w-5 h-5 text-white" strokeWidth={2.2} />
                   <span>{t('filter', 'Filter')}</span>
                 </button>
               </div>
@@ -252,7 +241,7 @@ const Events = () => {
                           onClick={() => setActiveCategory(category.id)}
                           className={`px-3 py-1.5 text-sm rounded-full transition-colors ${
                             activeCategory === category.id
-                              ? 'bg-indigo-600 text-white'
+                              ? 'bg-black text-white'
                               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                           }`}
                         >
@@ -312,7 +301,7 @@ const Events = () => {
                       setSearchQuery('');
                       setActiveCategory('all');
                     }}
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-black hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                   >
                     {t('clearFilters', 'Clear filters')}
                   </button>
