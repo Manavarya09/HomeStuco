@@ -1,10 +1,13 @@
 // Secure authentication utilities - Final Production Version
 
-// Secure credential validation (obfuscated for security)
+// Read credentials from environment (Vite exposes VITE_* only)
+const envUser = import.meta.env.VITE_ADMIN_USERNAME || '';
+const envPass = import.meta.env.VITE_ADMIN_PASSWORD || '';
+
+// Secure credential validation (obfuscated for basic deterrence)
 const SECURE_CREDENTIALS = {
-  // Base64 encoded credentials for basic obfuscation
-  u: btoa('homeStuco'), // username
-  p: btoa('admin2024'), // password
+  u: envUser ? btoa(envUser) : '',
+  p: envPass ? btoa(envPass) : '',
 };
 
 interface LoginResponse {
@@ -19,16 +22,19 @@ interface LoginResponse {
 // Validate credentials securely
 export const validateCredentials = async (username: string, password: string): Promise<boolean> => {
   try {
-    // Add artificial delay to prevent timing attacks
+    // Add artificial delay to reduce timing signals
     await new Promise(resolve => setTimeout(resolve, 100 + Math.random() * 200));
-    
-    // Decode and validate credentials
+
+    // Ensure env credentials are configured
+    if (!SECURE_CREDENTIALS.u || !SECURE_CREDENTIALS.p) {
+      return false;
+    }
+
     const validUsername = atob(SECURE_CREDENTIALS.u);
     const validPassword = atob(SECURE_CREDENTIALS.p);
-    
+
     return username === validUsername && password === validPassword;
   } catch (error) {
-    console.error('Credential validation error:', error);
     return false;
   }
 };

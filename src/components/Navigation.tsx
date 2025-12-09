@@ -11,10 +11,10 @@ const navLinks = [
   { name: "EVENTS", to: "/events" },
   { name: "MERCH", to: "/merch" },
   { name: "CLUBS", to: "/CLUBS" },
-  { name: "EMC", to: "/EMC" },
   { name: "ABOUT", to: "/about" },
   { name: "CONTACT", to: "/contact" },
-  { name: "SPARKS", to: "/sparks" },
+   { name: "EMC", to: "/EMC" },
+  { name: "BSF", external: true, to: "https://bsf.bitsdubaievents.com" },
   { name: "JASHN26", to: "/jashn26" },
 ];
 
@@ -92,17 +92,29 @@ const Navigation = () => {
             {React.useMemo(() => navLinks.map((link, idx) => (
               <React.Fragment key={link.name}>
                 <li>
-                  <Link
-                    to={link.to}
-                    className={`whitespace-nowrap transition-colors duration-200 ${
-                      location.pathname === link.to
-                        ? "border-b-2 border-white"
-                        : "hover:text-red-300"
-                    }`}
-                    aria-label={t(link.name)}
-                  >
-                    {t(link.name)}
-                  </Link>
+                  {link.external ? (
+                    <a
+                      href={link.to}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="whitespace-nowrap transition-colors duration-200 hover:text-red-300"
+                      aria-label={t(link.name)}
+                    >
+                      {t(link.name)}
+                    </a>
+                  ) : (
+                    <Link
+                      to={link.to}
+                      className={`whitespace-nowrap transition-colors duration-200 ${
+                        location.pathname === link.to
+                          ? "border-b-2 border-white"
+                          : "hover:text-red-300"
+                      }`}
+                      aria-label={t(link.name)}
+                    >
+                      {t(link.name)}
+                    </Link>
+                  )}
                 </li>
                 {idx < navLinks.length - 1 && (
                   <span className="h-6 w-px bg-white/40" />
@@ -162,17 +174,29 @@ const Navigation = () => {
               <ul className="space-y-2">
                 {navLinks.map((link) => (
                   <li key={link.name}>
-                    <Link
-                      to={link.to}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={`block w-full text-left py-4 px-4 rounded-lg font-semibold text-lg transition-all duration-200 ${
-                        location.pathname === link.to
-                          ? "bg-white text-black shadow-lg"
-                          : "text-white hover:bg-white/10 hover:pl-6"
-                      }`}
-                    >
-                      {t(link.name)}
-                    </Link>
+                    {link.external ? (
+                      <a
+                        href={link.to}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block w-full text-left py-4 px-4 rounded-lg font-semibold text-lg transition-all duration-200 text-white hover:bg-white/10 hover:pl-6"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {t(link.name)}
+                      </a>
+                    ) : (
+                      <Link
+                        to={link.to}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={`block w-full text-left py-4 px-4 rounded-lg font-semibold text-lg transition-all duration-200 ${
+                          location.pathname === link.to
+                            ? "bg-white text-black shadow-lg"
+                            : "text-white hover:bg-white/10 hover:pl-6"
+                        }`}
+                      >
+                        {t(link.name)}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
